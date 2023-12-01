@@ -28,7 +28,7 @@ export default {
         else {
             await interaction.reply({ content: "**Challenge Declared!**", ephemeral: true })
 
-            const channel = interaction.guild?.channels.cache.get(CHALLENGE_CHANNEL_ID)
+            const channel = await interaction.guild?.channels.fetch(CHALLENGE_CHANNEL_ID)
 
             if (channel?.isTextBased()) {
                 message = await channel.send({ 

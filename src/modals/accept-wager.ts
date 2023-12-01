@@ -11,10 +11,13 @@ export default {
                 .setRequired(false)
                 .setStyle(TextInputStyle.Short))),
     async execute(interaction: ModalSubmitInteraction) {
+        if (!interaction.isFromMessage()) throw new Error()
+
         const wagerMessage = interaction.fields.getTextInputValue("wager-message")
-        if (interaction.isFromMessage())
-            await interaction.update({ components: [] }) // remove buttons so user can't double-accept
-        await interaction.reply({
+        
+        await interaction.update({ components: [] }) // remove buttons so user can't double-accept
+        
+        await interaction.followUp({
             embeds: [
                 new EmbedBuilder()
                     .setDescription("**You have accepted the wager!**")
@@ -22,26 +25,28 @@ export default {
             ]
         })
         const embedFields = interaction.message?.embeds?.[0]?.fields
-        const challenger = embedFields?.find(x => x.name === "Challenger")?.value
-        if (challenger) {
-            const user = interaction.client.users.cache.get(challenger.substring(2, challenger.length - 1))
-            if (user) {
-                await user.send({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setDescription(`**Your wager with ${interaction.user} was accepted!**`)
-                            .addFields(...(wagerMessage ? [{ name: "Message", value: `*${wagerMessage}*` }] : []))
-                            .setColor("Green")
-                    ]
-                })
-                const messageUrl = embedFields?.find(x => x.name === "Challenge Message")?.value
-                if (messageUrl) {
-                    const [guildId, channelId, messageId] = messageUrl.split("/").slice(-3)
-                    const channel = interaction.client.guilds.cache.get(guildId)?.channels.cache.get(channelId)
+        const messageUrl = embedFields?.find(x => x.name === "Challenge Message")?.value
+        if (messageUrl) {
+            const [guildId, channelId, messageId] = messageUrl.split("/").slice(-3)
+            const guild = await interaction.client.guilds.fetch(guildId).catch(_ => undefined)
+            const challenger = embedFields?.find(x => x.name === "Challenger")?.value
+            if (challenger) {
+                const userId = challenger.substring(2, challenger.length - 1)
+                const user = await guild?.members.fetch(userId).catch(_ => undefined)
+                if (user) {
+                    await user.send({
+                        embeds: [
+                            new EmbedBuilder()
+                                .setDescription(`**Your wager with ${interaction.user} was accepted!**`)
+                                .addFields(...(wagerMessage ? [{ name: "Message", value: `*${wagerMessage}*` }] : []))
+                                .setColor("Green")
+                        ]
+                    })
+                    const channel = await guild?.channels.fetch(channelId).catch(_ => undefined)
                     if (channel?.isTextBased()) {
-                        const message = channel.messages.cache.get(messageId)
+                        const message = await channel.messages.fetch(messageId)
                         if (message) {
-                            message.reply({
+                            await message.reply({
                                 embeds: [
                                     new EmbedBuilder()
                                         .setDescription(`**${interaction.user} has accepted the wager with ${user}!**`)
