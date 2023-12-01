@@ -24,7 +24,7 @@ export default {
         let message: Message | undefined = undefined
 
         if (interaction.options.get("ephemeral")?.value)
-            await interaction.reply({ content: `**${interaction.options.getUser("user")} has been challenged!**`, ephemeral: true })
+            await interaction.reply({ content: `**${user} has been challenged!**`, ephemeral: true })
         else {
             await interaction.reply({ content: "**Challenge Declared!**", ephemeral: true })
 
@@ -38,7 +38,7 @@ export default {
                                 name: interaction.user.displayName,
                                 iconURL: interaction.user.displayAvatarURL()
                             })
-                            .setDescription(`**${interaction.options.getUser("user")} has been challenged to a wager by ${interaction.user}!**`)
+                            .setDescription(`**${user} has been challenged to a wager by ${interaction.user}!**`)
                             .setColor("Green")
                     ]
                 })
