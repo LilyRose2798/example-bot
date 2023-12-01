@@ -16,7 +16,7 @@ export default {
         const wagerMessage = interaction.fields.getTextInputValue("wager-message")
         
         await interaction.update({ components: [] }) // remove buttons so user can't double-accept
-        
+
         await interaction.followUp({
             embeds: [
                 new EmbedBuilder()
@@ -44,7 +44,7 @@ export default {
                     })
                     const channel = await guild?.channels.fetch(channelId).catch(_ => undefined)
                     if (channel?.isTextBased()) {
-                        const message = await channel.messages.fetch(messageId)
+                        const message = await channel.messages.fetch(messageId).catch(_ => undefined)
                         if (message) {
                             await message.reply({
                                 embeds: [
