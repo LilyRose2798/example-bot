@@ -12,7 +12,8 @@ export default {
                 .setStyle(TextInputStyle.Short))),
     async execute(interaction: ModalSubmitInteraction) {
         const wagerMessage = interaction.fields.getTextInputValue("wager-message")
-        await interaction.message?.edit({ components: [] }) // remove buttons so user can't double-accept
+        if (interaction.isFromMessage())
+            await interaction.update({ components: [] }) // remove buttons so user can't double-accept
         await interaction.reply({
             embeds: [
                 new EmbedBuilder()
