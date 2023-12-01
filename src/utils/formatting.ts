@@ -1,0 +1,5 @@
+export const BT = "\`\`\`"
+export const GREEN = "\x1b[32m"
+export const RESET = "\x1b[039m"
+export const YELLOW = "\x1b[33m"
+export const RED = "\x1b[31m"
