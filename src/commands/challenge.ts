@@ -23,7 +23,7 @@ export default {
 
         let message: Message | undefined = undefined
 
-        if (interaction.options.get("ephemeral"))
+        if (interaction.options.get("ephemeral")?.value)
             await interaction.reply({ content: `**${interaction.options.getUser("user")} has been challenged!**`, ephemeral: true })
         else {
             await interaction.reply({ content: "**Challenge Declared!**", ephemeral: true })
