@@ -1,9 +1,9 @@
-import { CommandInteraction, SlashCommandBuilder } from "discord.js"
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js"
 import challenge from "./challenge"
 
 export type Command = {
     data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">,
-    execute(interaction: CommandInteraction): void | Promise<void>
+    execute(interaction: ChatInputCommandInteraction): void | Promise<void>
 }
 
 export const commands: Command[] = [challenge]

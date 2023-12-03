@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, EmbedBuilder, CommandInteraction, Message } from "discord.js"
+import { ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, EmbedBuilder, ChatInputCommandInteraction, Message } from "discord.js"
 import acceptWager from "../buttons/accept-wager"
 import declineWager from "../buttons/decline-wager"
 import { CHALLENGE_CHANNEL_ID } from "../env"
@@ -14,7 +14,7 @@ export default {
         .addBooleanOption(option =>
             option.setName("ephemeral")
                 .setDescription("Keep this challenge private.")),
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const user = interaction.options.getUser("user")
         if (user?.id === interaction.user.id) {
             await interaction.reply({ content: `**You cannot challenge yourself!**`, ephemeral: true })
